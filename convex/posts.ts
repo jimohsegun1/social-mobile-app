@@ -45,12 +45,13 @@ export const getFeedPosts = query({
     const currentUser = await getAuthenticatedUser(ctx);
 
     // get all posts
-    const posts = await ctx.db.query("posts").order("desc").collect();
+    const posts = await ctx.db.query("posts").order("desc").collect(); // get all posts from the db
     if (posts.length === 0) return [];
+
     // enhace posts with userdata and interaction status
     const postsWithInfo = await Promise.all(
       posts.map(async (post) => {
-        const postAuthor = (await ctx.db.get(post.userId))!;
+        const postAuthor = (await ctx.db.get(post.userId))!; //
         const like = await ctx.db
           .query("likes")
           .withIndex("by_user_and_post", (q) =>
@@ -72,7 +73,7 @@ export const getFeedPosts = query({
             username: postAuthor?.username,
             image: postAuthor?.image,
           },
-          isLiked: !!like,
+          isLiked: !!like, 
           isBookmarked: !!bookmark,
         };
       })
